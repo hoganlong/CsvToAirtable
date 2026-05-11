@@ -1,0 +1,11 @@
+# .NET build outputs
+bin/
+obj/
+
+# IDE
+.vs/
+*.user
+*.suo
+
+# Local config (contains secrets — use appsettings.template.json as a starting point)
+appsettings.json
