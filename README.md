@@ -44,6 +44,14 @@ Actually create the records:
 dotnet run -- create
 ```
 
+Print all options:
+
+```bash
+dotnet run -- --help    # also: -h, -?, /?, ?
+```
+
+Unknown flags (any unrecognized token starting with `-` or `/`) exit with code 1 after printing usage.
+
 ## What it does
 
 1. Parses the CSV (RFC-4180 compliant, strips UTF-8 BOM if present).

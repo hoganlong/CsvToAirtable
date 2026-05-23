@@ -4,8 +4,46 @@ using System.Text;
 
 class Program
 {
+  static void PrintUsage()
+  {
+    Console.WriteLine("Usage: dotnet run [-- create]");
+    Console.WriteLine();
+    Console.WriteLine("Reads Import:CsvPath, builds a lookup of Import:LinkedTable rows by");
+    Console.WriteLine("Import:LinkMatchField, and creates rows in Import:TargetTable with");
+    Console.WriteLine("Import:LinkField pointing at the matched record id.");
+    Console.WriteLine();
+    Console.WriteLine("Modes:");
+    Console.WriteLine("  (no args)               DRY RUN — parses the CSV and reports matches/skips,");
+    Console.WriteLine("                          but does not create any Airtable records.");
+    Console.WriteLine("  create                  LIVE — actually create the records via the API");
+    Console.WriteLine("                          (batched 10 at a time, 250ms delay).");
+    Console.WriteLine();
+    Console.WriteLine("Options:");
+    Console.WriteLine("  -h, --help, -?, /?, ?   show this help and exit");
+    Console.WriteLine();
+    Console.WriteLine("Configuration (appsettings.json, Import: section):");
+    Console.WriteLine("  CsvPath, TargetTable, LinkField, LinkedTable, LinkMatchField");
+    Console.WriteLine("Plus Airtable:ApiKey and Airtable:BaseId.");
+  }
+
   static async Task<int> Main(string[] args)
   {
+    if (args.Any(a => a is "-h" or "--help" or "-?" or "/?" or "?"))
+    {
+      PrintUsage();
+      return 0;
+    }
+    foreach (var a in args)
+    {
+      if (a.StartsWith("-") || a.StartsWith("/"))
+      {
+        Console.WriteLine($"Unknown option: {a}");
+        Console.WriteLine();
+        PrintUsage();
+        return 1;
+      }
+    }
+
     var config = new ConfigurationBuilder()
       .SetBasePath(Directory.GetCurrentDirectory())
       .AddJsonFile("appsettings.json")
